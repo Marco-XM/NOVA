@@ -1,0 +1,78 @@
+<UserControl x:Class="Nova.App.Settings.Pages.BehaviorPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:Nova.App.Controls">
+    <StackPanel>
+        <TextBlock Text="Startup" Style="{StaticResource PageSection}" Margin="2,0,0,8" />
+        <c:SettingCard Glyph="&#xE7E8;" Title="Launch NOVA when Windows starts" Description="{Binding StartupStatusText}">
+            <ui:ToggleSwitch IsChecked="{Binding StartWithWindows}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE7B3;" Title="Show the notch on startup" Description="Otherwise NOVA starts hidden in the tray until you show it.">
+            <ui:ToggleSwitch IsChecked="{Binding ShowNotchOnStartup}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE9F5;" Title="Keep running in the background" Description="When off, closing this window quits NOVA completely.">
+            <ui:ToggleSwitch IsChecked="{Binding RunInBackground}" />
+        </c:SettingCard>
+
+        <TextBlock Text="Keyboard shortcut" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE765;" Title="Notch shortcut" Description="Works from any app. Ctrl+Space is avoided by default because it switches input languages and triggers autocomplete in editors.">
+            <c:SettingCard.Footer>
+                <StackPanel>
+                    <TextBlock Text="{Binding Message, ElementName=Recorder}" Style="{StaticResource Secondary}" />
+                    <TextBlock Text="{Binding HotkeyStatus}" FontSize="12" Margin="0,2,0,0">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource Secondary}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HotkeyHasError}" Value="True">
+                                        <Setter Property="Foreground" Value="#FFB86B" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </StackPanel>
+            </c:SettingCard.Footer>
+            <c:HotkeyBox x:Name="Recorder" Value="{Binding Hotkey}" RecordingChanged="OnRecordingChanged" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE7C9;" Title="Shortcut action" Description="Toggle opens and closes the notch; Always expand only opens it.">
+            <ComboBox ItemsSource="{Binding HotkeyActions}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding HotkeyAction}" MinWidth="200" />
+        </c:SettingCard>
+
+        <TextBlock Text="Interaction" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE8B0;" Title="Grow on hover" Description="The notch grows slightly when the pointer is over it.">
+            <ui:ToggleSwitch IsChecked="{Binding ExpandOnHover}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE916;" Title="Hover delay" Description="Wait before reacting, so passing the pointer by doesn't trigger it." IsEnabled="{Binding ExpandOnHover}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding HoverDelay, StringFormat={}{0:0} ms}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0" Maximum="800" TickFrequency="10" Value="{Binding HoverDelay}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE73F;" Title="Collapse delay" Description="How long the notch waits after the pointer leaves.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding CollapseDelay, StringFormat={}{0:0} ms}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="100" Maximum="3000" TickFrequency="50" Value="{Binding CollapseDelay}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE7A8;" Title="Auto-hide" Description="When idle, the notch shrinks to a thin line at the top edge so it doesn't cover browser tabs or title bars. Move the pointer to it to bring it back. &quot;When a window reaches the top&quot; only does this while the active window is maximized or touches the top of the screen.">
+            <ComboBox ItemsSource="{Binding AutoHideModes}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding AutoHideMode}" MinWidth="220" />
+        </c:SettingCard>
+
+        <TextBlock Text="Fullscreen" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE7FC;" Title="Hide during fullscreen games" Description="Includes exclusive (Direct3D) and borderless fullscreen games on the notch's monitor.">
+            <ui:ToggleSwitch IsChecked="{Binding HideInGames}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE714;" Title="Hide during fullscreen video" Description="Browsers and video players in fullscreen (e.g. YouTube, Netflix, VLC).">
+            <ui:ToggleSwitch IsChecked="{Binding HideInVideo}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE8AB;" Title="Hide during presentations" Description="PowerPoint slide shows and Windows presentation mode.">
+            <ui:ToggleSwitch IsChecked="{Binding HideInPresentations}" />
+        </c:SettingCard>
+
+        <TextBlock Text="Privacy" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE722;" Title="Hide the notch from screenshots and recordings" Description="Screen capture, screen sharing and recording tools won't see the notch (Windows 10 2004 or later).">
+            <ui:ToggleSwitch IsChecked="{Binding ExcludeFromCapture}" />
+        </c:SettingCard>
+    </StackPanel>
+</UserControl>

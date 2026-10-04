@@ -1,0 +1,21 @@
+<UserControl x:Class="Nova.App.Notch.Views.SearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Margin="20,0,16,4">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <TextBlock Text="&#xE721;" Style="{StaticResource NotchIcon}" FontSize="16" Foreground="{DynamicResource Notch.Secondary}" />
+        <TextBox x:Name="Query" Grid.Column="1" Style="{StaticResource NotchTextBox}" Margin="12,0,10,0" Tag="Search the web…"
+                 Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}" />
+        <Button Grid.Column="2" Style="{StaticResource NotchTileButton}" Height="32" Padding="12,0" FontSize="12" ToolTip="Open Windows Search (Win+S)"
+                Command="{Binding WindowsSearchCommand}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="&#xE7C4;" Style="{StaticResource NotchIcon}" FontSize="12" />
+                <TextBlock Text="Windows Search" Style="{StaticResource NotchText}" FontSize="12" Margin="7,0,0,0" VerticalAlignment="Center" />
+            </StackPanel>
+        </Button>
+    </Grid>
+</UserControl>

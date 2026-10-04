@@ -1,0 +1,110 @@
+<UserControl x:Class="Nova.App.Notch.Views.NotificationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <!-- Standard: icon + title + subtitle -->
+        <Grid Margin="16,0,22,2" Visibility="{Binding NotifIsStandard, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Border Width="38" Height="38" CornerRadius="19" Background="{DynamicResource Notch.AccentSoft}" VerticalAlignment="Center">
+                <TextBlock Text="{Binding NotifGlyph}" Style="{StaticResource NotchIcon}" FontSize="17" Foreground="{DynamicResource Notch.Accent}" />
+            </Border>
+            <StackPanel Grid.Column="1" Margin="13,0,0,0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="14" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" Margin="0,1,0,0" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Indicator: icon + level bar + value -->
+        <Grid Margin="18,0,20,0" Visibility="{Binding NotifIsIndicator, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="34" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="{Binding NotifGlyph}" Style="{StaticResource NotchIcon}" FontSize="16" Width="20" />
+            <ProgressBar Grid.Column="1" Style="{StaticResource NotchProgress}" Value="{Binding NotifLevel, Mode=OneWay}" Margin="12,0,10,0" VerticalAlignment="Center" Height="5" />
+            <TextBlock Grid.Column="2" Text="{Binding NotifLevelText}" Style="{StaticResource NotchText.Digits}" FontSize="12.5" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Center" />
+        </Grid>
+
+        <!-- Another app's message: app icon + sender + text, Open / Dismiss -->
+        <Grid Margin="16,0,16,2" Visibility="{Binding NotifIsApp, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Width="40" Height="40" CornerRadius="11" Background="{DynamicResource Notch.Tile}" VerticalAlignment="Center" ClipToBounds="True">
+                <Grid>
+                    <TextBlock Text="&#xE8BD;" Style="{StaticResource NotchIcon}" FontSize="16" Foreground="{DynamicResource Notch.Accent}" />
+                    <Image Source="{Binding NotifIcon}" Width="30" Height="30" Visibility="{Binding NotifHasIcon, Converter={StaticResource BoolToVisibility}}" />
+                </Grid>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding NotifAppName}" Style="{StaticResource NotchText.Caption}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource NotchIconButton}" Width="32" Height="32" FontSize="12" Content="&#xE8A7;"
+                        ToolTip="Open the app to reply" Command="{Binding OpenNotificationCommand}" />
+                <Button Style="{StaticResource NotchIconButton}" Width="32" Height="32" FontSize="11" Content="&#xE711;"
+                        ToolTip="Dismiss" Command="{Binding DismissNotificationCommand}" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Incoming call from another app: caller + Dismiss / Open (answering happens in the app) -->
+        <Grid Margin="16,0,16,2" Visibility="{Binding NotifIsCall, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Width="46" Height="46" CornerRadius="23" Background="{DynamicResource Notch.Tile}" VerticalAlignment="Center" ClipToBounds="True">
+                <Grid>
+                    <TextBlock Text="&#xE717;" Style="{StaticResource NotchIcon}" FontSize="18" Foreground="#4ADE80" />
+                    <Image Source="{Binding NotifIcon}" Width="32" Height="32" Visibility="{Binding NotifHasIcon, Converter={StaticResource BoolToVisibility}}" />
+                </Grid>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                <TextBlock Style="{StaticResource NotchText.Caption}" TextTrimming="CharacterEllipsis">
+                    <Run Text="{Binding NotifAppName, Mode=OneWay}" /><Run Text=" · ringing" />
+                </TextBlock>
+                <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" TextTrimming="CharacterEllipsis" />
+            </StackPanel>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource NotchIconButton}" Width="36" Height="36" FontSize="12" Content="&#xE711;"
+                        ToolTip="Hide from the notch (the call keeps ringing in the app)" Command="{Binding DismissNotificationCommand}" />
+                <Button Style="{StaticResource NotchIconButton}" Width="40" Height="40" FontSize="15" Content="&#xE717;" Margin="8,0,0,0"
+                        ToolTip="Open the app to answer" Command="{Binding OpenNotificationCommand}" Foreground="White" Background="#30A46C" />
+            </StackPanel>
+        </Grid>
+
+        <!-- Media: artwork + track -->
+        <Grid Margin="14,0,22,2" Visibility="{Binding NotifIsMedia, Converter={StaticResource BoolToVisibility}}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Border Width="48" Height="48" CornerRadius="12" Background="{DynamicResource Notch.Tile}" VerticalAlignment="Center" ClipToBounds="True">
+                <Grid>
+                    <TextBlock Text="&#xE8D6;" Style="{StaticResource NotchIcon}" FontSize="18" Foreground="{Binding NotifAccent}" />
+                    <Border CornerRadius="12" Visibility="{Binding NotifHasArtwork, Converter={StaticResource BoolToVisibility}}">
+                        <Border.Background>
+                            <ImageBrush ImageSource="{Binding NotifArtwork}" Stretch="UniformToFill" />
+                        </Border.Background>
+                    </Border>
+                </Grid>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="13,0,8,0" VerticalAlignment="Center">
+                <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="14" FontWeight="SemiBold" />
+                <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" Margin="0,1,0,0" />
+            </StackPanel>
+            <TextBlock Grid.Column="2" Text="{Binding NotifGlyph}" Style="{StaticResource NotchIcon}" FontSize="15" Foreground="{Binding NotifAccent}" />
+        </Grid>
+    </Grid>
+</UserControl>

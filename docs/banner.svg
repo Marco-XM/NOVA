@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="420" viewBox="0 0 1280 420" role="img" aria-label="NOVA — an animated notch with music, lyrics and aurora light at the top of a Windows desktop">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0B1020"/>
+      <stop offset="1" stop-color="#05070E"/>
+    </linearGradient>
+    <linearGradient id="art" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F0ABFC"/>
+      <stop offset="0.5" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+    <linearGradient id="notchFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#05060A"/>
+      <stop offset="1" stop-color="#0D1018"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#F0ABFC" stop-opacity="0.45"/>
+      <stop offset="0.6" stop-color="#8B9CFF" stop-opacity="0.12"/>
+      <stop offset="1" stop-color="#8B9CFF" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="38"/>
+    </filter>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity="0.6"/>
+    </filter>
+    <!-- The notch: hangs from the top edge with concave "shoulders". -->
+    <path id="notch" d="M 338 0 Q 360 0 360 22 L 360 128 A 38 38 0 0 0 398 166 L 882 166 A 38 38 0 0 0 920 128 L 920 22 Q 920 0 942 0 Z"/>
+    <clipPath id="notchClip"><use href="#notch"/></clipPath>
+  </defs>
+
+  <rect width="1280" height="420" fill="url(#bg)"/>
+
+  <!-- Ambient light spilling below the notch -->
+  <ellipse cx="640" cy="170" rx="360" ry="70" fill="url(#glow)">
+    <animate attributeName="ry" values="62;78;62" dur="6s" repeatCount="indefinite"/>
+  </ellipse>
+
+  <!-- Notch body -->
+  <use href="#notch" fill="url(#notchFill)" filter="url(#shadow)"/>
+
+  <!-- Aurora light drifting inside the glass, tinted by the cover art -->
+  <g clip-path="url(#notchClip)" opacity="0.42">
+    <g filter="url(#soft)">
+      <ellipse cx="480" cy="120" rx="170" ry="90" fill="#F0ABFC">
+        <animateTransform attributeName="transform" type="translate" values="0 0; 120 -20; 0 0" dur="13s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="760" cy="140" rx="180" ry="90" fill="#8B5CF6">
+        <animateTransform attributeName="transform" type="translate" values="0 0; -140 10; 0 0" dur="11s" repeatCount="indefinite"/>
+      </ellipse>
+      <ellipse cx="860" cy="60" rx="140" ry="80" fill="#F97316">
+        <animateTransform attributeName="transform" type="translate" values="0 0; -60 40; 0 0" dur="15s" repeatCount="indefinite"/>
+      </ellipse>
+    </g>
+  </g>
+  <path d="M 360 128 A 38 38 0 0 0 398 166 L 882 166 A 38 38 0 0 0 920 128" fill="none" stroke="url(#rim)" stroke-width="1.5"/>
+
+  <!-- Now playing -->
+  <rect x="392" y="30" width="108" height="108" rx="20" fill="url(#art)"/>
+  <circle cx="446" cy="84" r="22" fill="#05060A" opacity="0.35"/>
+  <circle cx="446" cy="84" r="6" fill="#FFFFFF" opacity="0.8"/>
+
+  <g font-family="Segoe UI, Inter, -apple-system, Helvetica, Arial, sans-serif">
+    <text x="524" y="50" font-size="13" fill="#F0ABFC" font-weight="600" letter-spacing="0.5">♫  NOW PLAYING</text>
+    <text x="524" y="80" font-size="25" fill="#FFFFFF" font-weight="700">Neon Skyline</text>
+    <text x="524" y="104" font-size="16" fill="#9CA3AF">Aurora Avenue</text>
+    <text x="524" y="130" font-size="15" fill="#F0ABFC" font-weight="600">and the whole city lights up for us</text>
+  </g>
+
+  <!-- Progress -->
+  <rect x="524" y="146" width="330" height="4" rx="2" fill="#FFFFFF" opacity="0.15"/>
+  <rect x="524" y="146" width="140" height="4" rx="2" fill="#FFFFFF">
+    <animate attributeName="width" values="120;250;120" dur="14s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Equalizer -->
+  <g fill="#F0ABFC">
+    <rect x="862" y="48" width="5" height="26" rx="2.5"><animate attributeName="height" values="10;28;14;24;10" dur="1.1s" repeatCount="indefinite"/><animate attributeName="y" values="56;47;54;49;56" dur="1.1s" repeatCount="indefinite"/></rect>
+    <rect x="872" y="48" width="5" height="26" rx="2.5"><animate attributeName="height" values="22;8;28;12;22" dur="0.9s" repeatCount="indefinite"/><animate attributeName="y" values="50;57;47;55;50" dur="0.9s" repeatCount="indefinite"/></rect>
+    <rect x="882" y="48" width="5" height="26" rx="2.5"><animate attributeName="height" values="14;26;10;28;14" dur="1.25s" repeatCount="indefinite"/><animate attributeName="y" values="54;48;56;47;54" dur="1.25s" repeatCount="indefinite"/></rect>
+    <rect x="892" y="48" width="5" height="26" rx="2.5"><animate attributeName="height" values="24;12;20;8;24" dur="1s" repeatCount="indefinite"/><animate attributeName="y" values="49;55;51;57;49" dur="1s" repeatCount="indefinite"/></rect>
+  </g>
+
+  <!-- Wordmark -->
+  <g font-family="Segoe UI, Inter, -apple-system, Helvetica, Arial, sans-serif" text-anchor="middle">
+    <rect x="466" y="262" width="34" height="14" rx="7" fill="#6EE7F9">
+      <animate attributeName="width" values="34;46;34" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="x" values="466;454;466" dur="4s" repeatCount="indefinite"/>
+    </rect>
+    <text x="660" y="290" font-size="64" font-weight="700" fill="#FFFFFF" letter-spacing="22">NOVA</text>
+    <text x="640" y="342" font-size="22" fill="#9CA3AF">The dynamic island for Windows</text>
+    <text x="640" y="374" font-size="16" fill="#6B7280">music · lyrics · calls &amp; messages · quick apps · tools · aurora light</text>
+  </g>
+</svg>

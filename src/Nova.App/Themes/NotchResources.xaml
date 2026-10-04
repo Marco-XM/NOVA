@@ -1,0 +1,383 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:infra="clr-namespace:Nova.App.Infrastructure">
+
+    <!-- ───────────── typography ───────────── -->
+    <FontFamily x:Key="Notch.Font">Segoe UI Variable Text, Segoe UI</FontFamily>
+    <FontFamily x:Key="Notch.DisplayFont">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="Notch.IconFont">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+
+    <!-- ───────────── palette (swapped at runtime for the light "Frost" material) ───────────── -->
+    <SolidColorBrush x:Key="Notch.Foreground" Color="#F5F6F9" />
+    <SolidColorBrush x:Key="Notch.Secondary" Color="#A0A5B2" />
+    <SolidColorBrush x:Key="Notch.Tertiary" Color="#6C717E" />
+    <SolidColorBrush x:Key="Notch.Divider" Color="#14FFFFFF" />
+    <SolidColorBrush x:Key="Notch.Hover" Color="#1AFFFFFF" />
+    <SolidColorBrush x:Key="Notch.Pressed" Color="#2BFFFFFF" />
+    <SolidColorBrush x:Key="Notch.Tile" Color="#0EFFFFFF" />
+    <SolidColorBrush x:Key="Notch.TileHover" Color="#1EFFFFFF" />
+    <SolidColorBrush x:Key="Notch.Track" Color="#29FFFFFF" />
+    <SolidColorBrush x:Key="Notch.Fill" Color="#F5F6F9" />
+    <SolidColorBrush x:Key="Notch.Accent" Color="#8B9CFF" />
+    <SolidColorBrush x:Key="Notch.AccentSoft" Color="#338B9CFF" />
+    <SolidColorBrush x:Key="Notch.PrimaryButton" Color="#F5F6F9" />
+    <SolidColorBrush x:Key="Notch.PrimaryButtonForeground" Color="#0A0B0F" />
+    <SolidColorBrush x:Key="Notch.Danger" Color="#FF7A7A" />
+
+    <!-- ───────────── text ───────────── -->
+    <Style x:Key="NotchText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.Font}" />
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Foreground}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+        <Setter Property="TextOptions.TextFormattingMode" Value="Ideal" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Grayscale" />
+    </Style>
+    <Style x:Key="NotchText.Title" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.DisplayFont}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style x:Key="NotchText.Large" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.DisplayFont}" />
+        <Setter Property="FontSize" Value="17" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style x:Key="NotchText.Secondary" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Secondary}" />
+        <Setter Property="FontSize" Value="12.5" />
+    </Style>
+    <Style x:Key="NotchText.Caption" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Tertiary}" />
+        <Setter Property="FontSize" Value="11" />
+    </Style>
+    <Style x:Key="NotchText.Section" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Tertiary}" />
+        <Setter Property="FontSize" Value="11" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style x:Key="NotchText.Digits" TargetType="TextBlock" BasedOn="{StaticResource NotchText}">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.DisplayFont}" />
+        <Setter Property="Typography.NumeralAlignment" Value="Tabular" />
+        <Setter Property="TextTrimming" Value="None" />
+    </Style>
+    <Style x:Key="NotchIcon" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.IconFont}" />
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Foreground}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Grayscale" />
+    </Style>
+
+    <!-- ───────────── buttons ───────────── -->
+    <Style x:Key="NotchButtonBase" TargetType="Button">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Foreground}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource Notch.Font}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <Style x:Key="NotchIconButton" TargetType="Button" BasedOn="{StaticResource NotchButtonBase}">
+        <Setter Property="Width" Value="36" />
+        <Setter Property="Height" Value="36" />
+        <Setter Property="FontFamily" Value="{StaticResource Notch.IconFont}" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <Border x:Name="Bg" CornerRadius="18" Background="{TemplateBinding Background}" />
+                        <ContentPresenter x:Name="Content" HorizontalAlignment="Center" VerticalAlignment="Center"
+                                          RenderTransformOrigin="0.5,0.5" TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.Hover}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.Pressed}" />
+                            <Setter TargetName="Content" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.9" ScaleY="0.9" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.3" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NotchPrimaryButton" TargetType="Button" BasedOn="{StaticResource NotchButtonBase}">
+        <Setter Property="Width" Value="46" />
+        <Setter Property="Height" Value="46" />
+        <Setter Property="FontFamily" Value="{StaticResource Notch.IconFont}" />
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="Foreground" Value="{DynamicResource Notch.PrimaryButtonForeground}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid x:Name="Root" RenderTransformOrigin="0.5,0.5">
+                        <Grid.RenderTransform>
+                            <ScaleTransform />
+                        </Grid.RenderTransform>
+                        <Ellipse Fill="{DynamicResource Notch.PrimaryButton}" />
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Root" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1.06" ScaleY="1.06" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Root" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.93" ScaleY="0.93" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Rounded tile button (tools row, calculator keys). -->
+    <Style x:Key="NotchTileButton" TargetType="Button" BasedOn="{StaticResource NotchButtonBase}">
+        <Setter Property="Background" Value="{DynamicResource Notch.Tile}" />
+        <Setter Property="Padding" Value="12,0" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="12" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform />
+                        </Border.RenderTransform>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.Foreground="{TemplateBinding Foreground}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.TileHover}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.Pressed}" />
+                            <Setter TargetName="Bg" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.35" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- App launcher tile: icon above label, background only on hover. -->
+    <Style x:Key="NotchAppButton" TargetType="Button" BasedOn="{StaticResource NotchButtonBase}">
+        <Setter Property="Width" Value="76" />
+        <Setter Property="Height" Value="80" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="16" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                        <Border.RenderTransform>
+                            <ScaleTransform />
+                        </Border.RenderTransform>
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.Tile}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.TileHover}" />
+                            <Setter TargetName="Bg" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.94" ScaleY="0.94" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Invisible-chrome button used for list rows (clipboard). -->
+    <Style x:Key="NotchRowButton" TargetType="Button" BasedOn="{StaticResource NotchButtonBase}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="Bg" CornerRadius="10" Background="Transparent" Padding="10,7">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.Tile}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource Notch.TileHover}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ───────────── slider ───────────── -->
+    <Style x:Key="NotchSliderFill" TargetType="RepeatButton">
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Fill}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Background="Transparent">
+                        <Border Height="4" CornerRadius="2" VerticalAlignment="Center" Background="{TemplateBinding Foreground}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NotchSliderEmpty" TargetType="RepeatButton">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RepeatButton">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NotchSliderThumb" TargetType="Thumb">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Thumb">
+                    <!-- Zero-width thumb: the dot overhangs it, so the fill reaches the track ends at 0% and 100%. -->
+                    <Canvas Width="0" Height="12" Background="Transparent">
+                        <Ellipse x:Name="Dot" Canvas.Left="-6" Width="12" Height="12" Fill="{DynamicResource Notch.Fill}" Opacity="0" />
+                    </Canvas>
+                    <ControlTemplate.Triggers>
+                        <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Slider}}" Value="True">
+                            <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                        </DataTrigger>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Dot" Property="Opacity" Value="1" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="NotchSlider" TargetType="Slider">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="IsMoveToPointEnabled" Value="True" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="1" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid Height="16" Background="Transparent">
+                        <Border Height="4" CornerRadius="2" VerticalAlignment="Center" Background="{DynamicResource Notch.Track}" />
+                        <Track x:Name="PART_Track">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="Slider.DecreaseLarge" Style="{StaticResource NotchSliderFill}" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="Slider.IncreaseLarge" Style="{StaticResource NotchSliderEmpty}" />
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb Style="{StaticResource NotchSliderThumb}" />
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- ───────────── text input ───────────── -->
+    <Style x:Key="NotchTextBox" TargetType="TextBox">
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Foreground}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource Notch.Foreground}" />
+        <Setter Property="SelectionBrush" Value="{DynamicResource Notch.Accent}" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontFamily" Value="{StaticResource Notch.Font}" />
+        <Setter Property="FontSize" Value="15" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="TextOptions.TextRenderingMode" Value="Grayscale" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Grid>
+                        <ScrollViewer x:Name="PART_ContentHost" Focusable="False" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" VerticalAlignment="Center" />
+                        <TextBlock x:Name="Placeholder" Text="{TemplateBinding Tag}" Style="{StaticResource NotchText}" Foreground="{DynamicResource Notch.Tertiary}"
+                                   FontSize="{TemplateBinding FontSize}" VerticalAlignment="Center" Margin="2,0,0,0" IsHitTestVisible="False" Visibility="Collapsed" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Text" Value="">
+                            <Setter TargetName="Placeholder" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="NotchScrollViewer" TargetType="ScrollViewer">
+        <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+        <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="PanningMode" Value="VerticalOnly" />
+    </Style>
+
+    <Style x:Key="NotchProgress" TargetType="ProgressBar">
+        <Setter Property="Height" Value="4" />
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ProgressBar">
+                    <Grid>
+                        <Border x:Name="PART_Track" CornerRadius="2" Background="{DynamicResource Notch.Track}" />
+                        <Border x:Name="PART_Indicator" CornerRadius="2" HorizontalAlignment="Left" Background="{TemplateBinding Foreground}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Foreground" Value="{DynamicResource Notch.Fill}" />
+    </Style>
+
+    <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+    <infra:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
+    <infra:InverseBoolConverter x:Key="InverseBool" />
+    <infra:PercentConverter x:Key="Percent" />
+    <infra:NumberFormatConverter x:Key="NumberFormat" />
+    <infra:EqualityConverter x:Key="EqualityConverter" />
+    <infra:NullToCollapsedConverter x:Key="NullToCollapsed" />
+    <infra:NullToCollapsedConverter x:Key="EmptyToCollapsed" />
+</ResourceDictionary>

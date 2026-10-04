@@ -1,0 +1,95 @@
+<UserControl x:Class="Nova.App.Settings.Pages.AppearancePage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:Nova.App.Controls">
+    <StackPanel>
+        <Border Style="{StaticResource Card}" Padding="0" ClipToBounds="True">
+            <c:NotchPreview x:Name="Preview" Theme="{Binding Theme}" Height="190" CornerRadius="8" />
+        </Border>
+
+        <TextBlock Text="Style" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE790;" Title="Material" Description="The surface of the notch.">
+            <ComboBox ItemsSource="{Binding Materials}" SelectedValuePath="Value" SelectedValue="{Binding Material}" MinWidth="220">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Label}" />
+                            <TextBlock Text="{Binding Description}" FontSize="11" Opacity="0.65" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE91B;" Title="Shape" Description="Attached hangs from the top edge; Floating sits just below it.">
+            <ComboBox ItemsSource="{Binding Shapes}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding Shape}" MinWidth="220" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE7C4;" Title="Position" Description="Where along the top of the screen the notch sits. It opens from that spot.">
+            <ComboBox ItemsSource="{Binding Positions}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding NotchPosition}" MinWidth="220" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE8A1;" Title="Idle content" Description="What the small resting pill shows.">
+            <ComboBox ItemsSource="{Binding IdleContents}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding IdleContent}" MinWidth="220" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE2B1;" Title="Accent color" Description="Used for glows, indicators and highlights.">
+            <c:SettingCard.Footer>
+                <StackPanel Orientation="Horizontal">
+                    <ItemsControl ItemsSource="{Binding AccentPresets}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Width="30" Height="30" Margin="0,0,8,0" Cursor="Hand" ToolTip="{Binding}"
+                                        Command="{Binding DataContext.SetAccentCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}" CommandParameter="{Binding}">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border CornerRadius="15" Background="{Binding}" BorderBrush="#40FFFFFF" BorderThickness="1" />
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                    <ui:TextBox Text="{Binding AccentColor, UpdateSourceTrigger=LostFocus}" Width="110" Margin="8,0,0,0" PlaceholderText="#RRGGBB" />
+                </StackPanel>
+            </c:SettingCard.Footer>
+            <Border Width="30" Height="30" CornerRadius="15" Background="{Binding AccentBrush}" />
+        </c:SettingCard>
+
+        <TextBlock Text="Glass &amp; light" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xF0E8;" Title="Transparency" Description="How much the desktop shows through the dark glass.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Transparency, StringFormat={}{0:0}%}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0" Maximum="60" TickFrequency="1" Value="{Binding Transparency}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE81E;" Title="Glow" Description="Soft accent light below the notch and during transitions.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding GlowAmount, StringFormat={}{0:0}%}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0" Maximum="100" TickFrequency="1" Value="{Binding GlowAmount}" />
+            </StackPanel>
+        </c:SettingCard>
+
+        <TextBlock Text="Size" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE740;" Title="Notch size" Description="Scales the notch and everything inside it.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding SizeScale, StringFormat={}{0:0}%}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="80" Maximum="130" TickFrequency="5" Value="{Binding SizeScale}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE71A;" Title="Corner radius" Description="Rounder or more squared corners.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding CornerRadius, StringFormat={}{0:0}%}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="30" Maximum="150" TickFrequency="5" Value="{Binding CornerRadius}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE74A;" Title="Distance from the top" Description="Only used by the Floating shape.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding TopOffset, StringFormat={}{0:0} px}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0" Maximum="40" TickFrequency="1" Value="{Binding TopOffset}" />
+            </StackPanel>
+        </c:SettingCard>
+    </StackPanel>
+</UserControl>

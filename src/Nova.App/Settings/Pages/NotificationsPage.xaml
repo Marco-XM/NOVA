@@ -1,0 +1,71 @@
+<UserControl x:Class="Nova.App.Settings.Pages.NotificationsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:Nova.App.Controls">
+    <StackPanel>
+        <c:SettingCard Glyph="&#xEA8F;" Title="Event notifications" Description="Let events briefly expand the notch. It never interrupts you while you're using it.">
+            <ui:ToggleSwitch IsChecked="{Binding NotificationsEnabled}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE916;" Title="Duration" Description="How long a notification stays before the notch returns to rest." IsEnabled="{Binding NotificationsEnabled}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding NotificationSeconds, StringFormat={}{0:0.0} s}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="1" Maximum="8" TickFrequency="0.5" Value="{Binding NotificationSeconds}" />
+            </StackPanel>
+        </c:SettingCard>
+        <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+            <ui:Button Content="Send a test notification" Icon="{ui:SymbolIcon Alert24}" Command="{Binding TestNotificationCommand}" />
+        </StackPanel>
+
+        <StackPanel IsEnabled="{Binding NotificationsEnabled}">
+            <TextBlock Text="Apps" Style="{StaticResource PageSection}" />
+            <c:SettingCard Glyph="&#xE8BD;" Title="Messages and calls from apps"
+                           Description="Shows Windows notifications from WhatsApp, Messenger, Teams, browsers and other apps. Click one to open the app — replying and answering calls happen there, because Windows doesn't let other apps press a notification's buttons.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyApps}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE8F2;" Title="Show message text" Description="Off shows only the app and the sender." IsEnabled="{Binding NotifyApps}">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyAppText}" />
+            </c:SettingCard>
+            <TextBlock Text="{Binding AppNotificationStatus, StringFormat=Status: {0}}" Style="{StaticResource Secondary}" Margin="4,2,0,0" />
+
+            <TextBlock Text="Media" Style="{StaticResource PageSection}" />
+            <c:SettingCard Glyph="&#xE768;" Title="Music started" Description="Also requires 'Expand when music starts' on the Media page.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyMusicStarted}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE8D6;" Title="Song changed">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyMusicChanged}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE769;" Title="Music paused">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyMusicPaused}" />
+            </c:SettingCard>
+
+            <TextBlock Text="System" Style="{StaticResource PageSection}" />
+            <c:SettingCard Glyph="&#xE995;" Title="Volume changed" Description="A small level indicator when the system volume changes.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyVolume}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE706;" Title="Brightness changed" Description="{Binding BrightnessStatus}">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyBrightness}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xEBA7;" Title="Battery" Description="Plugged in, unplugged, low (20%), critical (10%) and fully charged.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyBattery}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE701;" Title="Network connected / lost">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyNetwork}" />
+            </c:SettingCard>
+
+            <TextBlock Text="Activity" Style="{StaticResource PageSection}" />
+            <c:SettingCard Glyph="&#xE916;" Title="Timer finished" Description="Also plays the Windows alarm sound.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyTimer}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE896;" Title="Download completed" Description="Finished browser downloads in your Downloads folder.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyDownloads}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE768;" Title="App launched from NOVA">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyAppLaunched}" />
+            </c:SettingCard>
+            <c:SettingCard Glyph="&#xE8C8;" Title="Text copied" Description="Confirms each copy. Off by default to stay out of your way.">
+                <ui:ToggleSwitch IsChecked="{Binding NotifyClipboard}" />
+            </c:SettingCard>
+        </StackPanel>
+    </StackPanel>
+</UserControl>

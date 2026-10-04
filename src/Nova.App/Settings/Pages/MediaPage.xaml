@@ -1,0 +1,70 @@
+<UserControl x:Class="Nova.App.Settings.Pages.MediaPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:Nova.App.Controls">
+    <StackPanel>
+        <Border Style="{StaticResource Card}">
+            <Grid>
+                <StackPanel>
+                    <TextBlock Text="Now playing" Style="{StaticResource Secondary}" />
+                    <TextBlock Text="{Binding NowPlayingTitle}" FontSize="17" FontWeight="SemiBold" Margin="0,2,140,0" TextTrimming="CharacterEllipsis" Foreground="{DynamicResource TextFillColorPrimaryBrush}" />
+                    <TextBlock Text="{Binding NowPlayingSubtitle}" Style="{StaticResource Secondary}" Margin="0,2,140,0" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="{Binding HasNowPlaying, Converter={StaticResource BoolToVisibility}}">
+                    <ui:Button Appearance="Transparent" Padding="10" Command="{Binding NowPlayingPreviousCommand}"><TextBlock Text="&#xE892;" FontFamily="{StaticResource Settings.IconFont}" /></ui:Button>
+                    <ui:Button Appearance="Secondary" Padding="12" Margin="4,0" Command="{Binding NowPlayingToggleCommand}"><TextBlock Text="{Binding NowPlayingGlyph}" FontFamily="{StaticResource Settings.IconFont}" /></ui:Button>
+                    <ui:Button Appearance="Transparent" Padding="10" Command="{Binding NowPlayingNextCommand}"><TextBlock Text="&#xE893;" FontFamily="{StaticResource Settings.IconFont}" /></ui:Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <TextBlock Text="Sources" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE8D6;" Title="Media controls" Description="Show what's playing and control it from the notch.">
+            <ui:ToggleSwitch IsChecked="{Binding MediaEnabled}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xEC4F;" Title="Spotify" Description="{Binding SpotifyStatus}" IsEnabled="{Binding MediaEnabled}">
+            <ui:ToggleSwitch IsChecked="{Binding MediaSpotify}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE774;" Title="Google Chrome" Description="{Binding ChromeStatus}" IsEnabled="{Binding MediaEnabled}">
+            <ui:ToggleSwitch IsChecked="{Binding MediaChrome}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE93C;" Title="Other media apps" Description="{Binding OtherStatus}" IsEnabled="{Binding MediaEnabled}">
+            <ui:ToggleSwitch IsChecked="{Binding MediaOther}" />
+        </c:SettingCard>
+        <TextBlock Style="{StaticResource Secondary}" Margin="2,6,0,0"
+                   Text="All sources use the Windows media session API, the same one behind the volume flyout's media controls. No accounts or sign-in are needed. Spotify's Web API isn't used because it would require you to register a developer app." />
+
+        <TextBlock Text="Behavior" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE740;" Title="Expand when music starts" Description="Briefly shows the track when playback starts or the song changes.">
+            <ui:ToggleSwitch IsChecked="{Binding MediaAutoExpand}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE916;" Title="Show track for" Description="How long the auto-expanded track stays visible." IsEnabled="{Binding MediaAutoExpand}">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding MediaAutoExpandSeconds, StringFormat={}{0:0.0} s}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="1" Maximum="8" TickFrequency="0.5" Value="{Binding MediaAutoExpandSeconds}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE73F;" Title="Auto-collapse delay" Description="How long the expanded player stays open after the pointer leaves.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding MediaAutoCollapseSeconds, StringFormat={}{0:0.0} s}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0.2" Maximum="6" TickFrequency="0.1" Value="{Binding MediaAutoCollapseSeconds}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE9E9;" Title="Compact live indicator" Description="While something plays, the resting notch shows artwork and a small equalizer.">
+            <ui:ToggleSwitch IsChecked="{Binding MediaCompact}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE8B1;" Title="Animated equalizer" Description="Gently animates the equalizer bars (24 fps) while music plays." IsEnabled="{Binding MediaCompact}">
+            <ui:ToggleSwitch IsChecked="{Binding MediaEqualizer}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE769;" Title="Keep indicator after pausing" Description="How long a paused track stays in the resting notch.">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding MediaLingerMinutes, StringFormat={}{0:0.#} min}" Style="{StaticResource ValueText}" />
+                <Slider Style="{StaticResource SettingSlider}" Minimum="0.5" Maximum="15" TickFrequency="0.5" Value="{Binding MediaLingerMinutes}" />
+            </StackPanel>
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE8D2;" Title="Lyrics" Description="Shows the line being sung in the media panel. Looks up the song's title and artist on lrclib.net (a free lyrics database); nothing else is sent.">
+            <ui:ToggleSwitch IsChecked="{Binding MediaLyrics}" />
+        </c:SettingCard>
+    </StackPanel>
+</UserControl>

@@ -1,0 +1,57 @@
+<UserControl x:Class="Nova.App.Settings.Pages.ModulesPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+             xmlns:c="clr-namespace:Nova.App.Controls">
+    <StackPanel>
+        <TextBlock Text="Tools in the notch" Style="{StaticResource PageSection}" Margin="2,0,0,8" />
+        <c:SettingCard Glyph="&#xE916;" Title="Timer" Description="Countdown timers that keep running while the notch is closed and show as a live activity.">
+            <ui:ToggleSwitch IsChecked="{Binding ModTimer}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE8EF;" Title="Calculator" Description="Quick calculations with keyboard or keypad. Supports ( ) % ^ and sqrt, sin, log…">
+            <ui:ToggleSwitch IsChecked="{Binding ModCalculator}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xF0E3;" Title="Clipboard history" Description="Recently copied text, kept in memory only and never saved to disk. Content from password managers that opt out of clipboard history is skipped.">
+            <c:SettingCard.Footer>
+                <StackPanel Orientation="Horizontal" IsEnabled="{Binding ModClipboard}">
+                    <TextBlock Text="Remember" VerticalAlignment="Center" Margin="0,0,12,0" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                    <Slider Style="{StaticResource SettingSlider}" Minimum="3" Maximum="30" TickFrequency="1" Value="{Binding ClipboardSize}" />
+                    <TextBlock Text="{Binding ClipboardSize, StringFormat={}{0:0} items}" Style="{StaticResource ValueText}" Margin="12,0,0,0" TextAlignment="Left" />
+                </StackPanel>
+            </c:SettingCard.Footer>
+            <ui:ToggleSwitch IsChecked="{Binding ModClipboard}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE721;" Title="Quick search" Description="Search the web from the notch, or jump to Windows Search.">
+            <c:SettingCard.Footer>
+                <StackPanel IsEnabled="{Binding ModSearch}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Enter key opens" VerticalAlignment="Center" Width="120" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <ComboBox ItemsSource="{Binding SearchTargets}" DisplayMemberPath="Label" SelectedValuePath="Value" SelectedValue="{Binding SearchTarget}" MinWidth="180" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,8,0,0">
+                        <TextBlock Text="Search URL" VerticalAlignment="Center" Width="120" Foreground="{DynamicResource TextFillColorSecondaryBrush}" />
+                        <ui:TextBox Text="{Binding SearchUrl, UpdateSourceTrigger=LostFocus}" Width="380" ToolTip="{}{0} is replaced by your search text" />
+                    </StackPanel>
+                </StackPanel>
+            </c:SettingCard.Footer>
+            <ui:ToggleSwitch IsChecked="{Binding ModSearch}" />
+        </c:SettingCard>
+
+        <TextBlock Text="System indicators" Style="{StaticResource PageSection}" />
+        <c:SettingCard Glyph="&#xE995;" Title="Volume" Description="{Binding VolumeStatus}">
+            <ui:ToggleSwitch IsChecked="{Binding ModVolume}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE706;" Title="Brightness" Description="{Binding BrightnessStatus}">
+            <ui:ToggleSwitch IsChecked="{Binding ModBrightness}" IsEnabled="{Binding BrightnessSupported}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xEBA7;" Title="Battery" Description="{Binding BatteryStatus}">
+            <ui:ToggleSwitch IsChecked="{Binding ModBattery}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE701;" Title="Network" Description="Connection status on the home panel and when it changes.">
+            <ui:ToggleSwitch IsChecked="{Binding ModNetwork}" />
+        </c:SettingCard>
+        <c:SettingCard Glyph="&#xE896;" Title="Download watcher" Description="{Binding DownloadsStatus}">
+            <ui:ToggleSwitch IsChecked="{Binding ModDownloads}" />
+        </c:SettingCard>
+    </StackPanel>
+</UserControl>

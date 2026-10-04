@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Build
+        run: dotnet build Nova.sln -c Release
+
+      # Integration tests need a real desktop session (monitors, audio, registry); run them locally.
+      - name: Test
+        run: dotnet test tests/Nova.Tests -c Release --no-build --filter "Category!=Integration" --logger "trx;LogFileName=results.trx"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: tests/Nova.Tests/TestResults/*.trx
