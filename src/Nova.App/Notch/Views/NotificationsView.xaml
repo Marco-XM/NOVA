@@ -57,7 +57,7 @@
                                         </Grid>
                                     </Border>
                                     <StackPanel Grid.Column="1" Margin="11,0,8,0" VerticalAlignment="Center">
-                                        <TextBlock Text="{Binding AppName}" Style="{StaticResource NotchText.Caption}" />
+                                        <TextBlock Text="{Binding AppName}" Style="{StaticResource NotchText.Caption}" Foreground="{DynamicResource Notch.AccentText}" FontWeight="SemiBold" />
                                         <TextBlock Text="{Binding Title}" Style="{StaticResource NotchText}" FontSize="13" FontWeight="SemiBold" />
                                         <TextBlock Text="{Binding Body}" Style="{StaticResource NotchText.Secondary}" FontSize="12"
                                                    Visibility="{Binding HasBody, Converter={StaticResource BoolToVisibility}}" />

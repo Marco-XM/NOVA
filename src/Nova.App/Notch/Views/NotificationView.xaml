@@ -44,7 +44,8 @@
                 </Grid>
             </Border>
             <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
-                <TextBlock Text="{Binding NotifAppName}" Style="{StaticResource NotchText.Caption}" TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding NotifAppName}" Style="{StaticResource NotchText.Caption}" Foreground="{DynamicResource Notch.AccentText}" FontWeight="SemiBold"
+                           TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="13.5" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" TextTrimming="CharacterEllipsis" />
             </StackPanel>
@@ -71,7 +72,7 @@
             </Border>
             <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
                 <TextBlock Style="{StaticResource NotchText.Caption}" TextTrimming="CharacterEllipsis">
-                    <Run Text="{Binding NotifAppName, Mode=OneWay}" /><Run Text=" · ringing" />
+                    <Run Text="{Binding NotifAppName, Mode=OneWay}" Foreground="{DynamicResource Notch.AccentText}" FontWeight="SemiBold" /><Run Text=" · ringing" />
                 </TextBlock>
                 <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
                 <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" TextTrimming="CharacterEllipsis" />

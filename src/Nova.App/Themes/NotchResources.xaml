@@ -9,8 +9,8 @@
 
     <!-- ───────────── palette (swapped at runtime for the light "Frost" material) ───────────── -->
     <SolidColorBrush x:Key="Notch.Foreground" Color="#F5F6F9" />
-    <SolidColorBrush x:Key="Notch.Secondary" Color="#A0A5B2" />
-    <SolidColorBrush x:Key="Notch.Tertiary" Color="#6C717E" />
+    <SolidColorBrush x:Key="Notch.Secondary" Color="#B6BBC6" />
+    <SolidColorBrush x:Key="Notch.Tertiary" Color="#8E93A0" />
     <SolidColorBrush x:Key="Notch.Divider" Color="#14FFFFFF" />
     <SolidColorBrush x:Key="Notch.Hover" Color="#1AFFFFFF" />
     <SolidColorBrush x:Key="Notch.Pressed" Color="#2BFFFFFF" />
@@ -23,8 +23,11 @@
     <SolidColorBrush x:Key="Notch.PrimaryButton" Color="#F5F6F9" />
     <SolidColorBrush x:Key="Notch.PrimaryButtonForeground" Color="#0A0B0F" />
     <SolidColorBrush x:Key="Notch.Danger" Color="#FF7A7A" />
-    <!-- Unread-notification dot and count. -->
-    <SolidColorBrush x:Key="Notch.Badge" Color="#FF5C7A" />
+    <!-- Accent for small text (lightened / darkened for legibility). -->
+    <SolidColorBrush x:Key="Notch.AccentText" Color="#8B9CFF" />
+    <!-- Unread-notification dot and count (follow the accent). -->
+    <SolidColorBrush x:Key="Notch.Badge" Color="#8B9CFF" />
+    <SolidColorBrush x:Key="Notch.BadgeForeground" Color="#0A0B0F" />
 
     <!-- ───────────── text ───────────── -->
     <Style x:Key="NotchText" TargetType="TextBlock">
@@ -82,7 +85,7 @@
         <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
     <Style x:Key="NotchBadgeText" TargetType="TextBlock" BasedOn="{StaticResource NotchText.Digits}">
-        <Setter Property="Foreground" Value="White" />
+        <Setter Property="Foreground" Value="{DynamicResource Notch.BadgeForeground}" />
         <Setter Property="FontSize" Value="10.5" />
         <Setter Property="FontWeight" Value="SemiBold" />
         <Setter Property="HorizontalAlignment" Value="Center" />

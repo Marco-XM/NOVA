@@ -71,8 +71,8 @@ public sealed class NotchPalette
         else
         {
             Set("Notch.Foreground", Color.FromRgb(245, 246, 249));
-            Set("Notch.Secondary", Color.FromRgb(160, 165, 178));
-            Set("Notch.Tertiary", Color.FromRgb(108, 113, 126));
+            Set("Notch.Secondary", Color.FromRgb(182, 187, 198));
+            Set("Notch.Tertiary", Color.FromRgb(142, 147, 160));
             Set("Notch.Divider", Color.FromArgb(20, 255, 255, 255));
             Set("Notch.Hover", Color.FromArgb(26, 255, 255, 255));
             Set("Notch.Pressed", Color.FromArgb(43, 255, 255, 255));
@@ -85,6 +85,11 @@ public sealed class NotchPalette
         }
         Set("Notch.Accent", accent);
         Set("Notch.AccentSoft", Color.FromArgb(51, accent.R, accent.G, accent.B));
+        // Accent used for small text: nudged lighter (dark notch) or darker (Frost) until it reads clearly.
+        Set("Notch.AccentText", ColorMath.Readable(accent, IsLight));
+        // Unread dot and count follow the accent; the count text picks whichever of black/white reads on it.
+        Set("Notch.Badge", accent);
+        Set("Notch.BadgeForeground", ColorMath.Luminance(accent) > 0.18 ? Color.FromRgb(10, 11, 15) : Colors.White);
     }
 }
 
@@ -96,6 +101,37 @@ public static class ColorMath
     }
 
     public static Color WithAlpha(Color c, double alpha) => Color.FromArgb((byte)Math.Clamp(alpha * 255, 0, 255), c.R, c.G, c.B);
+
+    /// <summary>WCAG relative luminance (0 = black, 1 = white).</summary>
+    public static double Luminance(Color c)
+    {
+        static double Channel(byte v)
+        {
+            var s = v / 255.0;
+            return s <= 0.03928 ? s / 12.92 : Math.Pow((s + 0.055) / 1.055, 2.4);
+        }
+        return 0.2126 * Channel(c.R) + 0.7152 * Channel(c.G) + 0.0722 * Channel(c.B);
+    }
+
+    /// <summary>
+    /// Blends <paramref name="c"/> toward white (on a dark background) or black (on a light one) just
+    /// far enough for small text to stay legible, keeping its hue.
+    /// </summary>
+    public static Color Readable(Color c, bool onLight)
+    {
+        const double darkTarget = 0.30, lightTarget = 0.12;
+        var target = onLight ? Colors.Black : Colors.White;
+        for (var t = 0.0; t <= 1.0; t += 0.05)
+        {
+            var mixed = Color.FromRgb(
+                (byte)Math.Round(c.R + (target.R - c.R) * t),
+                (byte)Math.Round(c.G + (target.G - c.G) * t),
+                (byte)Math.Round(c.B + (target.B - c.B) * t));
+            var l = Luminance(mixed);
+            if (onLight ? l <= lightTarget : l >= darkTarget) return mixed;
+        }
+        return target;
+    }
 
     /// <summary>Rotates the hue of a color by <paramref name="degrees"/> and scales its saturation.</summary>
     public static Color Shift(Color c, double degrees, double saturation = 1, double lightness = 1)
