@@ -5,14 +5,19 @@
       <stop offset="0.55" stop-color="#0C1022"/>
       <stop offset="1" stop-color="#06080F"/>
     </linearGradient>
-    <linearGradient id="iconBg" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#22263A"/>
-      <stop offset="1" stop-color="#0A0B10"/>
+    <linearGradient id="iconBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C5CFF"/>
+      <stop offset="0.55" stop-color="#4C7DFF"/>
+      <stop offset="1" stop-color="#2BC8F0"/>
     </linearGradient>
-    <linearGradient id="pill" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#7C9CFF"/>
-      <stop offset="1" stop-color="#5EE6F5"/>
+    <linearGradient id="iconSheen" x1="0" y1="0" x2="0" y2="0.6">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
     </linearGradient>
+    <radialGradient id="iconGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
     <linearGradient id="art" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#F0ABFC"/>
       <stop offset="0.5" stop-color="#8B5CF6"/>
@@ -73,9 +78,17 @@
   <path d="M 360 128 A 38 38 0 0 0 398 166 L 882 166 A 38 38 0 0 0 920 128" fill="none" stroke="url(#rim)" stroke-width="1.5"/>
 
   <!-- Now playing -->
-  <rect x="392" y="30" width="108" height="108" rx="20" fill="url(#art)"/>
-  <circle cx="446" cy="84" r="22" fill="#05060A" opacity="0.35"/>
-  <circle cx="446" cy="84" r="6" fill="#FFFFFF" opacity="0.8"/>
+  <!-- Cover art as a spinning record -->
+  <g>
+    <animateTransform attributeName="transform" type="rotate" from="0 446 84" to="360 446 84" dur="9s" repeatCount="indefinite"/>
+    <circle cx="446" cy="84" r="54" fill="url(#art)"/>
+    <circle cx="446" cy="84" r="47" fill="none" stroke="#FFFFFF" stroke-opacity="0.09"/>
+    <circle cx="446" cy="84" r="39" fill="none" stroke="#FFFFFF" stroke-opacity="0.09"/>
+    <circle cx="446" cy="84" r="31" fill="none" stroke="#FFFFFF" stroke-opacity="0.09"/>
+  </g>
+  <circle cx="446" cy="84" r="54" fill="none" stroke="#FFFFFF" stroke-opacity="0.15"/>
+  <circle cx="446" cy="84" r="12" fill="#101116" fill-opacity="0.85" stroke="#FFFFFF" stroke-opacity="0.19"/>
+  <circle cx="446" cy="84" r="4" fill="#050609"/>
 
   <g font-family="Segoe UI, Inter, -apple-system, Helvetica, Arial, sans-serif">
     <text x="524" y="50" font-size="13" fill="#F0ABFC" font-weight="600" letter-spacing="0.5">♫  NOW PLAYING</text>
@@ -99,14 +112,16 @@
   </g>
 
   <!-- Wordmark -->
-  <!-- App icon (matches src/Nova.App/Assets/nova-256.png), drawn on a 236-unit grid -->
-  <g transform="translate(476 237) scale(0.254)">
-    <rect width="236" height="236" rx="52" fill="url(#iconBg)" stroke="#FFFFFF" stroke-opacity="0.12" stroke-width="3"/>
-    <rect x="28" y="46" width="180" height="110" rx="30" fill="#3A4366" opacity="0.85"/>
-    <rect x="52" y="46" width="132" height="44" rx="22" fill="url(#pill)">
-      <animate attributeName="width" values="132;156;132" dur="4s" repeatCount="indefinite"/>
-      <animate attributeName="x" values="52;40;52" dur="4s" repeatCount="indefinite"/>
+  <!-- App icon (same drawing as tools/make-icons.ps1), on a 100-unit grid -->
+  <g transform="translate(476 237) scale(0.6)">
+    <rect width="100" height="100" rx="27" fill="url(#iconBg)"/>
+    <rect width="100" height="100" rx="27" fill="url(#iconSheen)"/>
+    <ellipse cx="50" cy="50" rx="35" ry="16" fill="url(#iconGlow)"/>
+    <rect x="22" y="25" width="56" height="19" rx="9.5" fill="#0B0D14">
+      <animate attributeName="width" values="56;66;56" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="x" values="22;17;22" dur="4s" repeatCount="indefinite"/>
     </rect>
+    <rect x="0.5" y="0.5" width="99" height="99" rx="26.5" fill="none" stroke="#FFFFFF" stroke-opacity="0.16"/>
   </g>
   <g font-family="Segoe UI, Inter, -apple-system, Helvetica, Arial, sans-serif" text-anchor="middle">
     <text x="560" y="290" font-size="64" font-weight="700" fill="#FFFFFF" letter-spacing="22" text-anchor="start">NOVA</text>

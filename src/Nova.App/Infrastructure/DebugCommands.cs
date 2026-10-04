@@ -31,6 +31,7 @@ public static class DebugCommands
                     case "calculator": sm.Navigate(NotchState.Tool, NotchTool.Calculator); break;
                     case "clipboard": sm.Navigate(NotchState.Tool, NotchTool.Clipboard); break;
                     case "search": sm.Navigate(NotchState.Tool, NotchTool.Search); break;
+                    case "notifications": sm.Navigate(NotchState.Tool, NotchTool.Notifications); break;
                     case "hidden": sm.SetUserHidden(true); break;
                     case "shown": sm.SetUserHidden(false); break;
                 }

@@ -25,7 +25,7 @@ public enum NotchState
     Notification,
 }
 
-public enum NotchTool { None, Timer, Calculator, Clipboard, Search }
+public enum NotchTool { None, Timer, Calculator, Clipboard, Search, Notifications }
 
 public enum HiddenReason { None, User, Fullscreen }
 

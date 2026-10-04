@@ -1,6 +1,7 @@
 <UserControl x:Class="Nova.App.Notch.Views.HomeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:Nova.App.Controls">
     <UserControl.Resources>
         <Style x:Key="StatusChip" TargetType="Border">
             <Setter Property="Background" Value="{DynamicResource Notch.Tile}" />
@@ -32,22 +33,19 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Border Width="44" Height="44" CornerRadius="11" Background="{DynamicResource Notch.Tile}" ClipToBounds="True">
-                        <Grid>
-                            <TextBlock Text="&#xE8D6;" Style="{StaticResource NotchIcon}" FontSize="16" Foreground="{Binding MediaAccent}" />
-                            <Border CornerRadius="11" Visibility="{Binding HasArtwork, Converter={StaticResource BoolToVisibility}}">
-                                <Border.Background>
-                                    <ImageBrush ImageSource="{Binding ArtworkImage}" Stretch="UniformToFill" />
-                                </Border.Background>
-                            </Border>
-                        </Grid>
-                    </Border>
-                    <StackPanel Grid.Column="1" Margin="12,0,8,0" VerticalAlignment="Center">
+                    <ctl:SpinningDisc Width="44" Height="44" Artwork="{Binding ArtworkImage}" Accent="{Binding MediaAccent}" IsSpinning="{Binding DiscSpinning}" />
+                    <StackPanel Grid.Column="1" Margin="12,0,6,0" VerticalAlignment="Center">
                         <TextBlock Text="{Binding MediaTitle}" Style="{StaticResource NotchText}" FontSize="14" FontWeight="SemiBold" />
                         <TextBlock Text="{Binding MediaArtist}" Style="{StaticResource NotchText.Secondary}" />
                     </StackPanel>
-                    <Button Grid.Column="2" Style="{StaticResource NotchIconButton}" Content="{Binding PlayPauseGlyph}" Command="{Binding PlayPauseCommand}"
-                            IsEnabled="{Binding CanPlayPause}" ToolTip="Play / Pause" />
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <Button Style="{StaticResource NotchIconButton}" Width="30" Height="30" FontSize="12" Content="&#xE892;" ToolTip="Previous"
+                                Command="{Binding PreviousCommand}" IsEnabled="{Binding CanPrevious}" />
+                        <Button Style="{StaticResource NotchIconButton}" Width="34" Height="34" FontSize="15" Content="{Binding PlayPauseGlyph}" ToolTip="Play / Pause"
+                                Command="{Binding PlayPauseCommand}" IsEnabled="{Binding CanPlayPause}" />
+                        <Button Style="{StaticResource NotchIconButton}" Width="30" Height="30" FontSize="12" Content="&#xE893;" ToolTip="Next"
+                                Command="{Binding NextCommand}" IsEnabled="{Binding CanNext}" />
+                    </StackPanel>
                 </Grid>
             </Button>
 
@@ -72,7 +70,15 @@
                         <TextBlock Text="{Binding VolumeText}" Style="{StaticResource NotchText.Digits}" FontSize="11.5" Margin="5,0,0,0" VerticalAlignment="Center" />
                     </StackPanel>
                 </Border>
-                <Button Style="{StaticResource NotchIconButton}" Width="32" Height="32" FontSize="14" Margin="6,0,-6,0" Content="&#xE713;" ToolTip="Settings"
+                <Grid Margin="6,0,0,0">
+                    <Button Style="{StaticResource NotchIconButton}" Width="32" Height="32" FontSize="14" Content="&#xEA8F;" ToolTip="Notifications"
+                            Command="{Binding OpenNotificationsCommand}" />
+                    <Border Style="{StaticResource NotchBadge}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-3,-5,0" IsHitTestVisible="False"
+                            Visibility="{Binding HasUnread, Converter={StaticResource BoolToVisibility}}">
+                        <TextBlock Text="{Binding UnreadBadgeText}" Style="{StaticResource NotchBadgeText}" />
+                    </Border>
+                </Grid>
+                <Button Style="{StaticResource NotchIconButton}" Width="32" Height="32" FontSize="14" Margin="2,0,-6,0" Content="&#xE713;" ToolTip="Settings"
                         Command="{Binding OpenSettingsCommand}" />
             </StackPanel>
         </Grid>

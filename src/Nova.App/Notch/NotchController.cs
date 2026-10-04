@@ -4,6 +4,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
+using Nova.App.Controls;
 using Nova.App.Notch.Rendering;
 using Nova.App.Notch.Views;
 using Nova.App.Services;
@@ -58,6 +59,7 @@ public sealed class NotchController : IDisposable
     private double _windowHeightDip;
     private bool _frameRunning;
     private double _ambientAccumulator;
+    private double _discElapsed;
     private bool _keyboardRequested;
     private bool _started;
     private bool _windowCompact;
@@ -71,6 +73,7 @@ public sealed class NotchController : IDisposable
         _monitors = monitors;
         _sm = services.StateMachine;
         _profile = BuildProfile(services.Settings.Current);
+        _vm.ReduceMotion = _profile.ReducedMotion;
         _animator = new NotchAnimator(_profile, NotchLayout.For(_sm.Snapshot, LayoutOptions()));
         _onFrame = OnFrame;
 
@@ -104,6 +107,7 @@ public sealed class NotchController : IDisposable
 
         _sm.Changed += OnStateChanged;
         _monitors.SelectionChanged += OnMonitorChanged;
+        SpinningDisc.SpinningChanged += () => { if (SpinningDisc.AnySpinning) RunFrames(); };
     }
 
     public NotchSnapshot Snapshot => _sm.Snapshot;
@@ -113,7 +117,7 @@ public sealed class NotchController : IDisposable
         get
         {
             var f = _animator.Frame;
-            return $"animating={_animator.IsAnimating} frameRunning={_frameRunning} pending={_pendingViewKey} view={_currentViewKey} ambient={_window.Surface.AmbientLevel:0.00} compactWindow={_windowCompact} autoHide={AutoHideActive} windowAtTop={_windowAtTop} w={f.Width:0.0} h={f.Height:0.0} r={f.Radius:0.0} op={f.Opacity:0.00} content={f.ContentOpacity:0.000} scale={f.ContentScale:0.0000} off={f.ContentOffsetY:0.00} glow={f.Glow:0.000} bulge={f.Bulge:0.00} stretch={f.StretchX:0.0000} spec={f.Specular:0.00} target={_animator.Target}";
+            return $"animating={_animator.IsAnimating} frameRunning={_frameRunning} pending={_pendingViewKey} view={_currentViewKey} ambient={_window.Surface.AmbientLevel:0.00} discs={SpinningDisc.AnySpinning} compactWindow={_windowCompact} autoHide={AutoHideActive} windowAtTop={_windowAtTop} w={f.Width:0.0} h={f.Height:0.0} r={f.Radius:0.0} op={f.Opacity:0.00} content={f.ContentOpacity:0.000} scale={f.ContentScale:0.0000} off={f.ContentOffsetY:0.00} glow={f.Glow:0.000} bulge={f.Bulge:0.00} stretch={f.StretchX:0.0000} spec={f.Specular:0.00} target={_animator.Target}";
         }
     }
     public string CurrentThemeName => (_previewTheme ?? _profile.Theme).Name;
@@ -181,6 +185,7 @@ public sealed class NotchController : IDisposable
     public void ApplyAnimationSettings()
     {
         _profile = BuildProfile(_s.Settings.Current);
+        _vm.ReduceMotion = _profile.ReducedMotion;
         _animator.SetProfile(_previewTheme != null ? BuildProfile(_s.Settings.Current, _previewTheme) : _profile);
         ApplyAppearanceFlags();
         UpdateAuroraColors();
@@ -385,6 +390,7 @@ public sealed class NotchController : IDisposable
         }
         var notification = NotificationRouter.Route(evt, _s.Settings.Current);
         if (notification is null) return;
+        if (evt is AppNotificationEvent app) _vm.AddToHistory(app);
         // While the media panel is open the user already sees the track; don't cover it.
         if (notification.Style == NotificationStyle.Media && _sm.State is NotchState.Media or NotchState.Expanded) return;
         if (_sm.Notify(notification) && _sm.State == NotchState.Notification) _animator.Pulse();
@@ -431,6 +437,7 @@ public sealed class NotchController : IDisposable
         _vm.SetProgressVisible(snap.State is NotchState.Media or NotchState.Expanded);
         _vm.SetClockVisible(snap.State == NotchState.Expanded);
         _vm.SetTimerVisible((snap.State is NotchState.Compact or NotchState.Hover && snap.HasTimer && !snap.HasMedia) || snap.Tool == NotchTool.Timer);
+        _vm.SetHistoryVisible(snap.Tool == NotchTool.Notifications);
         if (snap.State == NotchState.Expanded) _vm.UpdateStatus(_s.Power, _s.Network, _s.Volume, _s.Settings.Current.Modules);
     }
 
@@ -491,6 +498,7 @@ public sealed class NotchController : IDisposable
             "tool:Calculator" => new CalculatorView(),
             "tool:Clipboard" => new ClipboardView(),
             "tool:Search" => new SearchView(),
+            "tool:Notifications" => new NotificationsView(),
             _ => new IdleView(),
         };
         _views[key] = view;
@@ -575,18 +583,23 @@ public sealed class NotchController : IDisposable
 
         var ambient = _window.Surface.AmbientLevel > 0.01 && _animator.Profile.AmbientLight && !_animator.Profile.ReducedMotion;
         if (ambient) _window.Surface.AmbientTime += dt;
+        var discs = SpinningDisc.AnySpinning;
+        _discElapsed += dt;
 
-        if (!animating && ambient)
+        if (!animating && (ambient || discs))
         {
-            // Ambient light alone only needs ~30 fps; skip every other frame to halve the cost.
+            // Ambient light and spinning artwork only need ~30 fps; skip the frames in between.
             _ambientAccumulator += dt;
             if (_ambientAccumulator < 1 / 30.0) return true;
             _ambientAccumulator = 0;
         }
 
-        ApplyFrame(_animator.Frame);
+        // Discs turn on the frames rendered here, so they never add frames of their own.
+        if (discs) SpinningDisc.Advance(_discElapsed);
+        _discElapsed = 0;
+        if (animating || ambient || !discs) ApplyFrame(_animator.Frame);
         if (!animating && _pendingViewKey is null && !_windowCompact) ShrinkWindowToShape();
-        var keepRunning = animating || ambient || _pendingViewKey != null;
+        var keepRunning = animating || ambient || discs || _pendingViewKey != null;
         if (!keepRunning)
         {
             _frameRunning = false;

@@ -24,6 +24,32 @@ public sealed partial class QuickAppItem : ObservableObject
     [ObservableProperty] private ImageSource? _icon;
 }
 
+/// <summary>One row of the notification history.</summary>
+public sealed class NotificationHistoryItem
+{
+    public NotificationHistoryItem(NotificationHistoryEntry entry, ImageSource? icon, bool showText, DateTimeOffset now)
+    {
+        Entry = entry;
+        var n = entry.Source;
+        AppName = n.AppName;
+        Title = n.Title.Length > 0 ? n.Title : n.AppName;
+        Body = n.IsCall ? (n.Body ?? "Call") : showText ? n.Body : null;
+        Icon = icon;
+        AgeText = entry.AgeText(now);
+    }
+
+    public NotificationHistoryEntry Entry { get; }
+    public string AppName { get; }
+    public string Title { get; }
+    public string? Body { get; }
+    public bool HasBody => !string.IsNullOrWhiteSpace(Body);
+    public bool IsCall => Entry.Source.IsCall;
+    public bool IsUnread => !Entry.IsRead;
+    public ImageSource? Icon { get; }
+    public bool HasIcon => Icon != null;
+    public string AgeText { get; }
+}
+
 /// <summary>Sentinel item rendered as the "+ Add" tile at the end of the quick app grid.</summary>
 public sealed class AddAppTile
 {
@@ -67,6 +93,7 @@ public sealed partial class NotchViewModel : ObservableObject
         };
         _s.Timer.StateChanged += _ => { UpdateTimer(); ScheduleTimerCompletion(); RefreshTimerTicker(); };
         _s.Clipboard.Changed += () => Dispatcher.CurrentDispatcher.BeginInvoke(SyncClipboard);
+        _history.Changed += SyncHistory;
         UpdateClock();
         UpdateTimer();
         ApplySettings(_s.Settings.Current);
@@ -115,9 +142,16 @@ public sealed partial class NotchViewModel : ObservableObject
         _ => "",
     };
 
+    /// <summary>Follows the Reduce Motion setting (set by the controller).</summary>
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(DiscSpinning))] private bool _reduceMotion;
+
+    /// <summary>The artwork disc turns while music plays, unless motion is reduced.</summary>
+    public bool DiscSpinning => IsPlaying && !ReduceMotion;
+
     partial void OnIsPlayingChanged(bool value)
     {
         OnPropertyChanged(nameof(PlayPauseGlyph));
+        OnPropertyChanged(nameof(DiscSpinning));
         RefreshProgressTimer();
     }
 
@@ -499,14 +533,68 @@ public sealed partial class NotchViewModel : ObservableObject
     {
         if (_notifApp is not { } app) return;
         OpenNotificationApp(app);
+        _history.Remove(app.Id); // handled in the app
         _s.StateMachine.Dismiss(app.CoalesceKey);
     }
 
     [RelayCommand]
     private void DismissNotification()
     {
-        if (_notifApp is { } app) _s.StateMachine.Dismiss(app.CoalesceKey);
+        if (_notifApp is not { } app) return;
+        _history.MarkRead(app.Id); // seen; it stays in the history
+        _s.StateMachine.Dismiss(app.CoalesceKey);
     }
+
+    // ───────────────────────── notification history ─────────────────────────
+    private readonly NotificationHistory _history = new();
+    private bool _historyVisible;
+    public ObservableCollection<NotificationHistoryItem> HistoryItems { get; } = new();
+    [ObservableProperty] private bool _hasHistory;
+    [ObservableProperty] private int _unreadCount;
+    [ObservableProperty] private bool _hasUnread;
+    [ObservableProperty] private string _unreadBadgeText = "";
+
+    /// <summary>Records another app's notification (UI thread).</summary>
+    public void AddToHistory(AppNotificationEvent notification) => _history.Add(notification, DateTimeOffset.Now);
+
+    /// <summary>The history view opened or closed. Leaving it marks everything as read.</summary>
+    public void SetHistoryVisible(bool visible)
+    {
+        if (visible == _historyVisible) return;
+        _historyVisible = visible;
+        if (visible) SyncHistory(); // refresh the ages
+        else _history.MarkAllRead();
+    }
+
+    private void SyncHistory()
+    {
+        var now = DateTimeOffset.Now;
+        var showText = _s.Settings.Current.Notifications.AppNotificationText;
+        HistoryItems.Clear();
+        foreach (var entry in _history.Items)
+        {
+            var n = entry.Source;
+            HistoryItems.Add(new NotificationHistoryItem(entry, _appLogos.Get(n.AppId ?? n.AppName, n.Logo)?.Image, showText, now));
+        }
+        HasHistory = HistoryItems.Count > 0;
+        UnreadCount = _history.UnreadCount;
+        HasUnread = UnreadCount > 0;
+        UnreadBadgeText = UnreadCount > 9 ? "9+" : UnreadCount.ToString();
+    }
+
+    [RelayCommand] private void OpenNotifications() => _s.StateMachine.Navigate(NotchState.Tool, NotchTool.Notifications);
+
+    [RelayCommand]
+    private void OpenHistoryItem(NotificationHistoryItem? item)
+    {
+        if (item is null) return;
+        OpenNotificationApp(item.Entry.Source);
+        _history.Remove(item.Entry.Id);
+        _s.StateMachine.Collapse();
+    }
+
+    [RelayCommand] private void DismissHistoryItem(NotificationHistoryItem? item) { if (item != null) _history.Remove(item.Entry.Id); }
+    [RelayCommand] private void ClearHistory() => _history.Clear();
 
     // ───────────────────────── timer ─────────────────────────
     [ObservableProperty] private string _timerText = "05:00";

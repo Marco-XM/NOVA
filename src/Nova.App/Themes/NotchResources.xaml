@@ -23,6 +23,8 @@
     <SolidColorBrush x:Key="Notch.PrimaryButton" Color="#F5F6F9" />
     <SolidColorBrush x:Key="Notch.PrimaryButtonForeground" Color="#0A0B0F" />
     <SolidColorBrush x:Key="Notch.Danger" Color="#FF7A7A" />
+    <!-- Unread-notification dot and count. -->
+    <SolidColorBrush x:Key="Notch.Badge" Color="#FF5C7A" />
 
     <!-- ───────────── text ───────────── -->
     <Style x:Key="NotchText" TargetType="TextBlock">
@@ -68,6 +70,47 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="HorizontalAlignment" Value="Center" />
         <Setter Property="TextOptions.TextRenderingMode" Value="Grayscale" />
+    </Style>
+
+    <!-- Small pill with a count ("3", "2 new"). -->
+    <Style x:Key="NotchBadge" TargetType="Border">
+        <Setter Property="Background" Value="{DynamicResource Notch.Badge}" />
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="MinWidth" Value="16" />
+        <Setter Property="Height" Value="16" />
+        <Setter Property="Padding" Value="5,0" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+    <Style x:Key="NotchBadgeText" TargetType="TextBlock" BasedOn="{StaticResource NotchText.Digits}">
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontSize" Value="10.5" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,-1,0,0" />
+    </Style>
+
+    <!-- ───────────── tooltip ───────────── -->
+    <!-- Tooltips inherit the font of the element they belong to, so an icon button's tooltip would be
+         drawn in the icon font (empty boxes). This sets the text font explicitly. -->
+    <Style x:Key="NotchToolTip" TargetType="ToolTip">
+        <Setter Property="FontFamily" Value="{StaticResource Notch.Font}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="#F5F6F9" />
+        <Setter Property="HasDropShadow" Value="False" />
+        <Setter Property="Placement" Value="Bottom" />
+        <Setter Property="VerticalOffset" Value="6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToolTip">
+                    <Border Background="#F2202228" BorderBrush="#24FFFFFF" BorderThickness="1" CornerRadius="8" Padding="10,5,10,6">
+                        <ContentPresenter TextElement.FontFamily="{TemplateBinding FontFamily}" TextElement.Foreground="{TemplateBinding Foreground}"
+                                          TextOptions.TextFormattingMode="Display" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!-- ───────────── buttons ───────────── -->

@@ -16,6 +16,9 @@
         Focusable="False"
         UseLayoutRounding="False"
         TextOptions.TextRenderingMode="Grayscale">
+    <Window.Resources>
+        <Style TargetType="ToolTip" BasedOn="{StaticResource NotchToolTip}" />
+    </Window.Resources>
     <Grid x:Name="Root">
         <r:NotchShadow x:Name="Shadow" />
         <r:NotchSurface x:Name="Surface" />

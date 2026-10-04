@@ -1,29 +1,21 @@
 <UserControl x:Class="Nova.App.Notch.Views.MediaView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:Nova.App.Controls">
     <Grid Margin="22,14,22,20">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <!-- Artwork with a soft color-matched glow behind it -->
+        <!-- Artwork as a spinning record with a soft color-matched glow behind it -->
         <Grid Width="132" Height="132" VerticalAlignment="Center">
-            <Border CornerRadius="18" Margin="6" Background="{Binding MediaAccent}" Opacity="0.35">
-                <Border.Effect>
+            <Ellipse Margin="8" Fill="{Binding MediaAccent}" Opacity="0.35">
+                <Ellipse.Effect>
                     <BlurEffect Radius="22" RenderingBias="Performance" />
-                </Border.Effect>
-            </Border>
-            <Border CornerRadius="18" ClipToBounds="True" Background="{DynamicResource Notch.Tile}">
-                <Grid>
-                    <TextBlock Text="&#xE8D6;" Style="{StaticResource NotchIcon}" FontSize="40" Foreground="{Binding MediaAccent}" Opacity="0.8" />
-                    <Border CornerRadius="18" Visibility="{Binding HasArtwork, Converter={StaticResource BoolToVisibility}}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding ArtworkImage}" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
-                </Grid>
-            </Border>
+                </Ellipse.Effect>
+            </Ellipse>
+            <ctl:SpinningDisc Artwork="{Binding ArtworkImage}" Accent="{Binding MediaAccent}" IsSpinning="{Binding DiscSpinning}" />
         </Grid>
 
         <Grid Grid.Column="1" Margin="20,2,0,0">

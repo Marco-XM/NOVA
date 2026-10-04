@@ -1,6 +1,7 @@
 <UserControl x:Class="Nova.App.Notch.Views.NotificationView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:Nova.App.Controls">
     <Grid>
         <!-- Standard: icon + title + subtitle -->
         <Grid Margin="16,0,22,2" Visibility="{Binding NotifIsStandard, Converter={StaticResource BoolToVisibility}}">
@@ -90,16 +91,8 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            <Border Width="48" Height="48" CornerRadius="12" Background="{DynamicResource Notch.Tile}" VerticalAlignment="Center" ClipToBounds="True">
-                <Grid>
-                    <TextBlock Text="&#xE8D6;" Style="{StaticResource NotchIcon}" FontSize="18" Foreground="{Binding NotifAccent}" />
-                    <Border CornerRadius="12" Visibility="{Binding NotifHasArtwork, Converter={StaticResource BoolToVisibility}}">
-                        <Border.Background>
-                            <ImageBrush ImageSource="{Binding NotifArtwork}" Stretch="UniformToFill" />
-                        </Border.Background>
-                    </Border>
-                </Grid>
-            </Border>
+            <ctl:SpinningDisc Width="48" Height="48" VerticalAlignment="Center" Artwork="{Binding NotifArtwork}" Accent="{Binding NotifAccent}"
+                              IsSpinning="{Binding DiscSpinning}" />
             <StackPanel Grid.Column="1" Margin="13,0,8,0" VerticalAlignment="Center">
                 <TextBlock Text="{Binding NotifTitle}" Style="{StaticResource NotchText}" FontSize="14" FontWeight="SemiBold" />
                 <TextBlock Text="{Binding NotifSubtitle}" Style="{StaticResource NotchText.Secondary}" Margin="0,1,0,0" />

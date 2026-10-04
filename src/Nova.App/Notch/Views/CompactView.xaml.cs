@@ -14,6 +14,7 @@ public partial class CompactView : UserControl, IFluidView
     private bool _visible;
     private bool _running;
     private bool _active = true;
+    private bool _hover;
 
     public CompactView()
     {
@@ -39,7 +40,14 @@ public partial class CompactView : UserControl, IFluidView
 
     public void SetHover(bool hover)
     {
-        TrackInfo.BeginAnimation(OpacityProperty, new DoubleAnimation(hover ? 1 : 0, TimeSpan.FromMilliseconds(hover ? 220 : 120)) { BeginTime = hover ? TimeSpan.FromMilliseconds(80) : TimeSpan.Zero });
+        var fade = new DoubleAnimation(hover ? 1 : 0, TimeSpan.FromMilliseconds(hover ? 220 : 120)) { BeginTime = hover ? TimeSpan.FromMilliseconds(80) : TimeSpan.Zero };
+        TrackInfo.BeginAnimation(OpacityProperty, fade);
+        // The media buttons only exist while hovering; collapsed otherwise so the pill keeps its layout.
+        var controlsFade = fade.Clone();
+        if (hover) Controls.Visibility = Visibility.Visible;
+        else controlsFade.Completed += (_, _) => { if (!_hover) Controls.Visibility = Visibility.Collapsed; };
+        _hover = hover;
+        Controls.BeginAnimation(OpacityProperty, controlsFade);
         // Grow the artwork with the notch instead of snapping to the new size.
         var size = new DoubleAnimation(hover ? 28 : 22, TimeSpan.FromMilliseconds(320)) { EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut } };
         Art.BeginAnimation(WidthProperty, size);
@@ -48,7 +56,8 @@ public partial class CompactView : UserControl, IFluidView
 
     private void OnVmChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(NotchViewModel.IsPlaying) or nameof(NotchViewModel.HasMedia) or nameof(NotchViewModel.AnimatedEqualizer) or nameof(NotchViewModel.TimerActive))
+        if (e.PropertyName is nameof(NotchViewModel.IsPlaying) or nameof(NotchViewModel.HasMedia) or nameof(NotchViewModel.AnimatedEqualizer)
+            or nameof(NotchViewModel.TimerActive) or nameof(NotchViewModel.DiscSpinning))
             Refresh();
     }
 
@@ -56,6 +65,7 @@ public partial class CompactView : UserControl, IFluidView
     {
         if (_vm is null) return;
         TimerPanel.Visibility = !_vm.HasMedia && _vm.TimerActive ? Visibility.Visible : Visibility.Collapsed;
+        Art.IsSpinning = _visible && _active && _vm.HasMedia && _vm.DiscSpinning;
         var run = _visible && _active && _vm.HasMedia && _vm.IsPlaying && _vm.AnimatedEqualizer;
         if (run == _running) return;
         _running = run;

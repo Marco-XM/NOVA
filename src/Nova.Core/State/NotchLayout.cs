@@ -69,7 +69,7 @@ public static class NotchLayout
             case NotchState.Idle:
                 return new(156, 30, 15);
             case NotchState.Hover:
-                if (snapshot.HasMedia) return new(392, 40, 20);
+                if (snapshot.HasMedia) return new(452, 40, 20); // artwork, track, previous / play / next, equalizer
                 if (snapshot.HasTimer) return new(250, 40, 20);
                 return new(196, 38, 19);
             case NotchState.Compact:
@@ -104,6 +104,7 @@ public static class NotchLayout
                     NotchTool.Calculator => new(360, 336, 30),
                     NotchTool.Clipboard => new(460, 304, 30),
                     NotchTool.Search => new(560, 76, 30),
+                    NotchTool.Notifications => new(480, 320, 30),
                     _ => new(440, 200, 32),
                 };
         }

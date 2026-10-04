@@ -18,5 +18,8 @@
         <TextBlock Text="{Binding TimeText}" Style="{StaticResource NotchText.Digits}" FontSize="12.5" FontWeight="SemiBold"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    Visibility="{Binding ShowClockIdle, Converter={StaticResource BoolToVisibility}}" />
+        <!-- Unread notifications -->
+        <Ellipse Width="6" Height="6" Margin="0,0,14,0" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{DynamicResource Notch.Badge}"
+                 Visibility="{Binding HasUnread, Converter={StaticResource BoolToVisibility}}" />
     </Grid>
 </UserControl>

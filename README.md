@@ -25,14 +25,18 @@ Grab `NOVA-win-Setup.exe` (per-user install, no admin needed) or the portable zi
   120 Hz display. Settings cover speed, intensity, spring strength, duration and Reduce Motion (which can
   follow the Windows setting). Every theme has a live preview in Settings and in onboarding.
 - **Media:** Spotify, Chrome and every other app that publishes a Windows media session (Edge, Firefox,
-  Media Player, VLC…). It uses the GSMTC API and is fully event-driven. You get artwork with a matching
-  accent color, a live progress bar with seeking, play/pause/next/previous and per-app volume.
+  Media Player, VLC…). It uses the GSMTC API and is fully event-driven. The cover art turns like a record
+  while music plays, with a matching accent color, a live progress bar with seeking and per-app volume.
+  Previous / play-pause / next are in the player, the home view and the hover pill.
 - **Synced lyrics:** the current line follows the song, fetched from [lrclib.net](https://lrclib.net) (free,
   no account). Only the track's title, artist, album and duration are sent, and results are cached. It
   can be turned off in Settings → Media.
 - **Calls and messages:** notifications from other apps (WhatsApp, Messenger, browsers…) appear in
   the notch with the app icon, sender and text, and incoming calls stay up while they ring. Open jumps to
-  the app. Windows asks once for permission to read notifications, and the message text can be hidden. Windows doesn't let one app press another app's notification buttons, so
+  the app. Windows asks once for permission to read notifications, and the message text can be hidden.
+- **Notification history:** missed messages and calls stay in a list (bell button on the home view). A dot
+  on the notch and a count on the bell show unread ones; dismiss them one by one or clear all. Kept in
+  memory only. Windows doesn't let one app press another app's notification buttons, so
   answering or replying happens in the app itself.
 - **Multi-monitor:** four modes (Primary, Selected, Active window, Mouse). The app is Per-Monitor-V2 DPI
   aware and places the window in physical pixels. A selected monitor is remembered by its hardware path,
@@ -82,6 +86,9 @@ This runs the tests, publishes a self-contained ReadyToRun build and creates `ar
 `Setup.exe` installer (per-user, no admin), a portable zip and Velopack update packages. Uninstalling
 removes the startup entry.
 
+The app and tray icons are drawn by `./tools/make-icons.ps1` (add `-Preview -OutDir <folder>` for a
+contact sheet).
+
 ## Where things live
 
 | What | Where |
@@ -104,7 +111,7 @@ src/Nova.Platform   Windows implementations: monitors (EnumDisplayMonitors + Dis
                     and the AppsFolder scanner, DWM backdrop blur.
 src/Nova.App        WPF app: composition root (AppHost), notch window/controller/renderer/views, tray,
                     settings window (WPF-UI), onboarding, live previews.
-tests/Nova.Tests    xUnit: 177 unit tests + 2 integration tests against the real Windows APIs.
+tests/Nova.Tests    xUnit: 188 unit tests + 2 integration tests against the real Windows APIs.
 ```
 
 Notch flow: inputs (pointer, hotkey, media, events, fullscreen) go to `NotchStateMachine`, whose
@@ -153,6 +160,7 @@ Automated coverage includes:
 - startup registry states
 - tray menu structure and commands
 - calculator, timer and clipboard
+- notification history (unread, dismiss, re-posted ids, capacity, ages)
 
 ### Manual test checklist (hardware-dependent)
 
