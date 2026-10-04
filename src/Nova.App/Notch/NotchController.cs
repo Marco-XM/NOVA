@@ -506,13 +506,16 @@ public sealed class NotchController : IDisposable
         return view;
     }
 
-    /// <summary>The auto-hide sliver has no content except the unread-notification dot at its right end.</summary>
+    /// <summary>
+    /// The auto-hide sliver has no content; with unread notifications the whole bar lights up in the
+    /// accent (the content clip gives it the sliver's rounded shape).
+    /// </summary>
     private static FrameworkElement HandleView()
     {
-        var dot = new System.Windows.Shapes.Ellipse { Width = 4, Height = 4, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
-        dot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "Notch.Badge");
-        dot.SetBinding(UIElement.VisibilityProperty, new System.Windows.Data.Binding(nameof(NotchViewModel.HasUnread)) { Converter = new BooleanToVisibilityConverter() });
-        return new Grid { Children = { dot } };
+        var fill = new Border { IsHitTestVisible = false };
+        fill.SetResourceReference(Border.BackgroundProperty, "Notch.Badge");
+        fill.SetBinding(UIElement.VisibilityProperty, new System.Windows.Data.Binding(nameof(NotchViewModel.HasUnread)) { Converter = new BooleanToVisibilityConverter() });
+        return new Grid { Children = { fill } };
     }
 
     private void SwapTo(string? key, NotchGeometry baseSize)
