@@ -156,15 +156,6 @@ Automated coverage includes:
 - calculator, timer and clipboard
 - notification history (unread, dismiss, re-posted ids, capacity, ages)
 
-## Releasing
-
-Push a version tag and the Release workflow builds the installer and publishes a GitHub release:
-
-```powershell
-git tag v1.0.0
-git push origin v1.0.0
-```
-
 ## License
 
 [MIT](LICENSE)

@@ -41,6 +41,7 @@ try {
     dotnet vpk pack `
         --packId NOVA `
         --packVersion $Version `
+        --runtime win-x64 `
         --packDir $publish `
         --mainExe NOVA.exe `
         --packTitle "NOVA" `
