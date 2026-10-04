@@ -1,5 +1,8 @@
 # NOVA — a dynamic-island control center for Windows
 
+[![CI](https://github.com/Marco-XM/NOVA/actions/workflows/ci.yml/badge.svg)](https://github.com/Marco-XM/NOVA/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/Marco-XM/NOVA)](https://github.com/Marco-XM/NOVA/releases)
+
 ![NOVA: an animated notch showing the current song and lyrics at the top of a Windows desktop](docs/banner.svg)
 
 NOVA puts a small animated notch at the top-center of your screen. It stays out of the way when nothing
