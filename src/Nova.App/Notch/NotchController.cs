@@ -391,8 +391,9 @@ public sealed class NotchController : IDisposable
         var notification = NotificationRouter.Route(evt, _s.Settings.Current);
         if (notification is null) return;
         if (evt is AppNotificationEvent app) _vm.AddToHistory(app);
-        // While the media panel is open the user already sees the track; don't cover it.
-        if (notification.Style == NotificationStyle.Media && _sm.State is NotchState.Media or NotchState.Expanded) return;
+        // While the media panel, home view or hover pill shows the track (and its controls), it updates in
+        // place; a track notification would cover the buttons the user is pressing.
+        if (notification.Style == NotificationStyle.Media && _sm.State is NotchState.Media or NotchState.Expanded or NotchState.Hover) return;
         if (_sm.Notify(notification) && _sm.State == NotchState.Notification) _animator.Pulse();
         ScheduleDeadline();
     }
@@ -488,7 +489,7 @@ public sealed class NotchController : IDisposable
         view = key switch
         {
             "idle" => new IdleView(),
-            "handle" => new Grid(),
+            "handle" => HandleView(),
             "compact" => new CompactView(),
             "notification" => new NotificationView(),
             "home" => new HomeView(),
@@ -503,6 +504,15 @@ public sealed class NotchController : IDisposable
         };
         _views[key] = view;
         return view;
+    }
+
+    /// <summary>The auto-hide sliver has no content except the unread-notification dot at its right end.</summary>
+    private static FrameworkElement HandleView()
+    {
+        var dot = new System.Windows.Shapes.Ellipse { Width = 4, Height = 4, HorizontalAlignment = HorizontalAlignment.Right, VerticalAlignment = VerticalAlignment.Center, Margin = new Thickness(0, 0, 6, 0) };
+        dot.SetResourceReference(System.Windows.Shapes.Shape.FillProperty, "Notch.Badge");
+        dot.SetBinding(UIElement.VisibilityProperty, new System.Windows.Data.Binding(nameof(NotchViewModel.HasUnread)) { Converter = new BooleanToVisibilityConverter() });
+        return new Grid { Children = { dot } };
     }
 
     private void SwapTo(string? key, NotchGeometry baseSize)
