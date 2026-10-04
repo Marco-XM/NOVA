@@ -140,15 +140,6 @@ animation theme means adding an `AnimationThemeDefinition`.
 `dotnet test` runs everything, including integration tests that need Windows. GitHub Actions runs the unit
 tests on every push and pull request with `--filter "Category!=Integration"`.
 
-## Releasing
-
-Push a version tag and the Release workflow builds the installer and publishes a GitHub release:
-
-```powershell
-git tag v1.0.0
-git push origin v1.0.0
-```
-
 Automated coverage includes:
 
 - settings round-trip, backup, corruption recovery and migration
@@ -165,35 +156,14 @@ Automated coverage includes:
 - calculator, timer and clipboard
 - notification history (unread, dismiss, re-posted ids, capacity, ages)
 
-### Manual test checklist (hardware-dependent)
+## Releasing
 
-These need physical setups that automated tests can't reproduce:
+Push a version tag and the Release workflow builds the installer and publishes a GitHub release:
 
-- [ ] Two and three monitors in every Monitor mode; drag a window between monitors in Active mode.
-- [ ] Mixed scaling (e.g. 150% laptop + 100% external): the notch stays centered and crisp when it moves.
-- [ ] Change scaling or resolution while NOVA runs.
-- [ ] Unplug the selected monitor (falls back to primary), then re-plug it (returns).
-- [ ] Laptop: brightness keys show the indicator; plug/unplug the charger; low battery.
-- [ ] Sleep/wake: media, monitor and timer resume correctly.
-- [ ] Fullscreen game, F11 browser video and PowerPoint slideshow: the notch hides and returns.
-- [ ] Spotify and Chrome (YouTube): artwork, controls, seeking and app volume.
-- [ ] Restart Windows with "Launch NOVA when Windows starts" on: starts silently.
-
-## Honest limitations
-
-- **No real blur of the desktop behind the notch.** The notch has to be a per-pixel-alpha (layered) window so
-  clicks pass through around it, and Windows can't clip its blur effect on such windows: tested, it paints a
-  solid black rectangle instead. The glass look (translucency, gradients, rim light, specular sweep) is
-  NOVA's own rendering.
-- **Brightness** changes are only reported by Windows for built-in laptop panels. External monitors change
-  brightness over DDC/CI, which has no notification, so the indicator says so.
-- **Spotify Web API** is not used, because it would require each user to register a developer app. Spotify
-  is fully supported through Windows media sessions.
-- **"Download completed"** detects browsers finishing a download into your Downloads folder (temporary file
-  renamed to final). Windows has no system-wide download event.
-- **Exclusive-mode fullscreen games** draw above every window, including NOVA's. NOVA detects them and hides.
-- **The Windows volume flyout** still appears alongside NOVA's indicator. Windows offers no supported way to
-  replace it.
+```powershell
+git tag v1.0.0
+git push origin v1.0.0
+```
 
 ## License
 
